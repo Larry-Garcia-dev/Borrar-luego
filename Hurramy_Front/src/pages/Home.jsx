@@ -461,12 +461,11 @@ function Home() {
           {/* Campaign Banners */}
           {bannerCampaigns.map((campaign, idx) => {
             const bannerUrl = getCampaignBannerUrl(campaign.bannerUrl);
-            console.log('[v0] Campaign:', campaign.name, 'bannerUrl:', campaign.bannerUrl, 'resolved:', bannerUrl);
             return (
             <div 
               key={campaign.id}
               className={`banner-carousel-slide banner-carousel-campaign${bannerIdx === idx + 1 ? ' active' : ''}`}
-              style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : {}}
+              style={{ backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none' }}
             >
               <div className="banner-carousel-campaign-content">
                 <h2 className="banner-carousel-campaign-title">{campaign.name}</h2>
