@@ -957,8 +957,7 @@ input[type="range"] {
 
 @media (max-width: 900px) {
 .home-grid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  grid-template-columns: 1fr;
 }
 }
 
@@ -3123,12 +3122,6 @@ body:has(.major_announcement) .app-layout {
   .campaign-search-input {
     min-width: 100%;
   }
-
-/* Home grid - keep 2 columns on mobile */
-.home-grid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
 }
 
 /* ===================== */
@@ -3488,57 +3481,49 @@ body:has(.major_announcement) .right-panel {
 /* Mobile Video Cards - Better Touch Targets */
 @media (max-width: 768px) {
   .home-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .home-card {
-    border-radius: var(--r14);
+    border-radius: var(--r18);
   }
 
   .home-card-thumb {
-    height: 120px;
+    height: 200px;
   }
 
   .home-card-body {
-    padding: 8px;
+    padding: 12px;
   }
 
   .home-card-title {
-    font-size: 12px;
+    font-size: 14px;
     min-height: auto;
     -webkit-line-clamp: 2;
-    margin-bottom: 4px;
   }
 
   .home-card-meta {
-    gap: 4px;
-    flex-wrap: wrap;
+    gap: 6px;
   }
 
   .home-card-badge {
-    padding: 2px 6px;
-    font-size: 10px;
+    padding: 2px 8px;
+    font-size: 11px;
   }
 
   .home-card-actions {
-    margin-top: 6px;
+    margin-top: 8px;
     width: 100%;
     justify-content: flex-start;
-    gap: 4px;
   }
 
   .home-card-action-btn {
-    padding: 4px 8px;
-    font-size: 10px;
-    min-height: 28px;
+    padding: 6px 10px;
+    font-size: 11px;
+    min-height: 32px;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-  }
-
-  .home-card-action-btn svg {
-    width: 12px;
-    height: 12px;
   }
 }
 
@@ -3685,23 +3670,6 @@ body:has(.major_announcement) .right-panel {
     width: 32px !important;
     height: 32px !important;
   }
-
-.home-card-thumb {
-  height: 100px;
-}
-
-.home-card-body {
-  padding: 6px;
-}
-
-.home-card-title {
-  font-size: 11px;
-}
-
-/* Video cards even more compact */
-.home-card-action-btn span {
-  display: none;
-}
 
   /* Campaign leaderboard - ultra compact */
   .campaign-grid .row {
@@ -4145,8 +4113,10 @@ body:has(.major_announcement) .right-panel {
   pointer-events: none;
   transform: translateY(-10px);
   max-height: 0 !important;
+  height: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
+  z-index: -1;
 }
 
 /* ===================== */
