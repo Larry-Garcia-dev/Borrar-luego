@@ -4075,6 +4075,26 @@ body:has(.major_announcement) .right-panel {
   margin: 8px 16px;
 }
 
+.mobile-nav-section-title {
+  padding: 8px 16px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+}
+
+.mobile-nav-campaign {
+  padding-left: 24px;
+  font-size: 14px;
+}
+
+.mobile-nav-campaign span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Show hamburger menu only on mobile */
 @media (max-width: 768px) {
   .header-hamburger-btn {
