@@ -104,10 +104,11 @@ function Home() {
 
     axios.get(`${API_URL}/campaigns`)
       .then(res => {
-        const now = new Date();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
         const active = (res.data || []).filter(c => {
-          const end = new Date(c.endDate);
-          return c.status === 'Active' && end >= now;
+          const end = new Date(c.endDate + 'T00:00:00');
+          return c.status === 'Active' && end >= today;
         });
 
         const campaignItems = [];
@@ -466,7 +467,7 @@ function Home() {
             <div 
               key={campaign.id}
               className={`banner-carousel-slide banner-carousel-campaign${bannerIdx === idx + 1 ? ' active' : ''}`}
-              style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : {}}
+              style={bannerUrl ? { backgroundImage: `url("${encodeURI(bannerUrl)}")` } : {}}
             >
               <div className="banner-carousel-campaign-content">
                 <h2 className="banner-carousel-campaign-title">{campaign.name}</h2>

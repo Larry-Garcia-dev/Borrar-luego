@@ -24,8 +24,14 @@ const storage = multer.diskStorage({
     cb(null, './uploads'); 
   },
   filename: function (req, file, cb) {
-    // Guarda el archivo con la fecha actual para evitar nombres duplicados
-    cb(null, Date.now() + '-' + file.originalname);
+    const ext = path.extname(file.originalname);
+    const baseName = path.parse(file.originalname).name;
+    const cleanName = baseName
+        .toLowerCase()
+        .replace(/[^a-z0-9-_]/gi, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    cb(null, Date.now() + '-' + cleanName + ext);
   }
 });
 
@@ -110,7 +116,14 @@ if (useS3) {
             cb(null, './uploads'); 
         },
         filename: function (req, file, cb) {
-            cb(null, Date.now() + '-' + file.originalname);
+            const ext = path.extname(file.originalname);
+            const baseName = path.parse(file.originalname).name;
+            const cleanName = baseName
+                .toLowerCase()
+                .replace(/[^a-z0-9-_]/gi, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            cb(null, Date.now() + '-' + cleanName + ext);
         }
     });
 }
