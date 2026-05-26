@@ -560,18 +560,25 @@ function Home() {
                         loading="lazy"
                       />
                     ) : (
-                      <video
-                        src={`${getVideoSrc(video)}#t=1`}
-                        preload="metadata"
-                        muted
-                        playsInline
-                        crossOrigin="anonymous"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        onLoadedData={(e) => {
-                          // Capture frame at 1 second and pause
-                          e.target.currentTime = 1;
-                        }}
-                      />
+                      <div className="home-card-video-fallback">
+                        <video
+                          src={`${getVideoSrc(video)}#t=1`}
+                          preload="metadata"
+                          muted
+                          playsInline
+                          crossOrigin="anonymous"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            // Hide video on error
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                        <div className="home-card-video-icon">
+                          <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--muted)" stroke="none">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                          </svg>
+                        </div>
+                      </div>
                     )}
                     <div className="home-card-play">
                       <div style={{
@@ -718,7 +725,7 @@ function Home() {
               <p><strong>演唱类别：</strong>美声歌曲（包括中国艺术歌曲及古诗词艺术歌曲）、流行及通俗歌曲、音乐剧选段等。</p>
 
               <h4>三、比赛项目</h4>
-              <p><strong>“唱响华府”卡拉 OK 挑战赛：</strong>演唱语言不限，曲目内容健康向上。允许独唱、对唱及组合形式，并可定期开放现场 PK 形式。月赛视频时长控制在 1 分钟以内，季赛及年度赛视频时长控制在 3 分钟以内。专业评委老师 3 - 5 位。</p>
+              <p><strong>“唱响华府��卡拉 OK 挑战赛：</strong>演唱语言不限，曲目内容健康向上。允许独唱、对唱及组合形式，并可定期开放现场 PK 形式。月赛视频时长控制在 1 分钟以内，季赛及年度赛视频时长控制在 3 分钟以内。专业评委老师 3 - 5 位。</p>
               <p><strong>“影动视界”短剧创意大奖赛：</strong>参赛类别包括原创短剧、动漫短剧、真人短剧。作品时长 1 - 5 分钟，内容积极健康，鼓励原创作品。专业评委老师 3 - 5 位。</p>
 
               <h4>四、赛事流程</h4>

@@ -40,6 +40,10 @@ function MyVideos() {
   const thumbUrl = (video) => {
     return getThumbnailUrl(video.thumbnailUrl);
   };
+  
+  const videoSrcUrl = (video) => {
+    return getVideoUrl(video.videoUrl);
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -284,8 +288,23 @@ function MyVideos() {
                             {tUrl ? (
                               <img src={tUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                             ) : (
-                              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" strokeWidth="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                              <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)' }}>
+                                <video
+                                  src={`${videoSrcUrl(video)}#t=1`}
+                                  preload="metadata"
+                                  muted
+                                  playsInline
+                                  crossOrigin="anonymous"
+                                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                  }}
+                                />
+                                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+                                  <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--muted)" stroke="none">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                  </svg>
+                                </div>
                               </div>
                             )}
                           </Link>
