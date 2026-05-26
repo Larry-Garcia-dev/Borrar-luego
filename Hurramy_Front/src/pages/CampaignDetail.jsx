@@ -4,7 +4,7 @@ import axios from 'axios';
 import Header from '../components/Header';
 import { translations } from '../utils/translations';
 import { API_URL } from '../config';
-import { getVideoUrl, getThumbnailUrl } from '../utils/mediaUtils';
+import { getVideoUrl, getThumbnailUrl, getMediaUrl } from '../utils/mediaUtils';
 import JoinVideoSidebar from '../components/JoinVideoSidebar';
 
 function CampaignDetail() {
@@ -754,6 +754,28 @@ function CampaignDetail() {
       <Header />
 
       <main className="wrap" style={{ maxWidth: '1180px', margin: '0 auto', padding: '18px' }}>
+        {/* Campaign Banner */}
+        {campaign.bannerUrl && (
+          <div style={{
+            width: '100%',
+            height: 'auto',
+            marginBottom: '16px',
+            borderRadius: 'var(--r22)',
+            overflow: 'hidden',
+          }}>
+            <img
+              src={getMediaUrl(campaign.bannerUrl)}
+              alt={campaign.name}
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+                objectFit: 'cover',
+              }}
+            />
+          </div>
+        )}
+
         <section className="announce" style={{
           position: 'relative',
           padding: '14px 16px',
