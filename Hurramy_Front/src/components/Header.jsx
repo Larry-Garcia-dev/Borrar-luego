@@ -5,7 +5,7 @@ import { translations } from '../utils/translations';
 import { API_URL } from '../config';
 import { getAvatarUrl } from '../utils/mediaUtils';
 
-function Header({ onSearch, onToggleSidebar, videos = [], initialQuery = '', onScrollChange }) {
+function Header({ onSearch, onToggleSidebar, videos = [], initialQuery = '', onScrollChange, onOpenInstructions }) {
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [langOpen, setLangOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -564,6 +564,18 @@ function Header({ onSearch, onToggleSidebar, videos = [], initialQuery = '', onS
                       <button className="header-user-dd-item" onClick={() => { setUserMenuOpen(false); navigate('/admin'); }}>
                         {IconAdmin}
                         <span>{t.header.adminPanel || t.adminPanel?.title || 'Admin Panel'}</span>
+                      </button>
+                    )}
+
+                    {/* Instructions */}
+                    {onOpenInstructions && (
+                      <button className="header-user-dd-item" onClick={() => { setUserMenuOpen(false); onOpenInstructions(); }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"/>
+                          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                          <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span>{t.header?.instructions || 'Instructions'}</span>
                       </button>
                     )}
 

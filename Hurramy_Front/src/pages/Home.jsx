@@ -30,7 +30,6 @@ function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [shareModal, setShareModal] = useState({ open: false, url: '', title: '' });
   const [instructionsOpen, setInstructionsOpen] = useState(false);
-  const [instructionsVisible, setInstructionsVisible] = useState(true);
   
   // Intersection observer for infinite scroll
   const { ref: loadMoreRef, inView } = useInView({
@@ -349,7 +348,7 @@ function Home() {
         onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         videos={videos}
         initialQuery={searchQuery}
-        onScrollChange={(visible) => setInstructionsVisible(visible)}
+        onOpenInstructions={() => setInstructionsOpen(true)}
       />
 
       {/* Mobile sidebar overlay */}
@@ -359,16 +358,6 @@ function Home() {
           onClick={() => setSidebarOpen(false)}
         />
       )}
-
-      <section className={`major_announcement${instructionsVisible ? '' : ' hidden'}`} aria-label="Major announcement">
-        <button
-          type="button"
-          className="major_announcement_btn"
-          onClick={() => setInstructionsOpen(true)}
-        >
-          Instructions
-        </button>
-      </section>
 
       <div className="app-layout">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
