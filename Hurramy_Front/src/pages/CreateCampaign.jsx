@@ -5,6 +5,7 @@ import { API_URL } from '../config';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { translations } from '../utils/translations';
+import { getMediaUrl } from '../utils/mediaUtils';
 
 function CreateCampaign() {
   const navigate = useNavigate();
@@ -100,15 +101,10 @@ function CreateCampaign() {
     setTeamMembers(updated);
   };
 
-  // Helper function to get proper image URL
+  // Helper function to get proper image URL - uses centralized mediaUtils
   const getImageUrl = (url) => {
     if (!url) return null;
-    // If it's already a full URL (S3 or external), return as is
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
-    // If it's a relative URL, prepend API_URL
-    return `${API_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+    return getMediaUrl(url);
   };
 
   // Banner upload handler
@@ -128,6 +124,8 @@ function CreateCampaign() {
       });
 
       if (res.data.url) {
+        console.log('[v0] Banner uploaded, URL:', res.data.url);
+        console.log('[v0] getImageUrl result:', getImageUrl(res.data.url));
         setFormData(prev => ({ ...prev, bannerUrl: res.data.url }));
       }
     } catch (err) {
@@ -153,6 +151,8 @@ function CreateCampaign() {
       });
 
       if (res.data.url) {
+        console.log('[v0] Team picture uploaded, URL:', res.data.url);
+        console.log('[v0] getImageUrl result:', getImageUrl(res.data.url));
         updateTeamMember(index, 'pictureUrl', res.data.url);
       }
     } catch (err) {

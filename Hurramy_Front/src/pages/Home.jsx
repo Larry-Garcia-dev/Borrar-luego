@@ -8,7 +8,7 @@ import Header from '../components/Header';
 import ShareModal from '../components/ShareModal';
 import { translations } from '../utils/translations';
 import { API_URL } from '../config';
-import { getVideoUrl, getThumbnailUrl } from '../utils/mediaUtils';
+import { getVideoUrl, getThumbnailUrl, getMediaUrl } from '../utils/mediaUtils';
 
 const ROTATE_MS = 6000;
 const ENDING_SOON_DAYS = 3; // campaigns ending within 3 days get special color
@@ -207,11 +207,10 @@ function Home() {
     }, ROTATE_MS);
   };
 
-  // Helper to get campaign banner URL
+  // Helper to get campaign banner URL - uses centralized mediaUtils
   const getCampaignBannerUrl = (url) => {
     if (!url) return null;
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
-    return `${API_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+    return getMediaUrl(url);
   };
 
   const setAnn = (i) => {
