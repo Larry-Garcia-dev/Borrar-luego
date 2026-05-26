@@ -508,37 +508,6 @@ input[type="range"] {
   box-shadow: 0 18px 42px rgba(255, 88, 211, 0.22);
 }
 
-.banner-carousel-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0, 0, 0, 0.4);
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  z-index: 15;
-}
-
-.banner-carousel-arrow:hover {
-  background: rgba(0, 0, 0, 0.6);
-  transform: translateY(-50%) scale(1.05);
-}
-
-.banner-carousel-prev {
-  left: 20px;
-}
-
-.banner-carousel-next {
-  right: 20px;
-}
-
 .banner-carousel-dots {
   position: absolute;
   bottom: 16px;
@@ -567,6 +536,16 @@ input[type="range"] {
 
 .banner-carousel-dot:hover {
   border-color: white;
+}
+
+/* Drag/grab cursor for carousel */
+.banner-carousel {
+  cursor: grab;
+  user-select: none;
+}
+
+.banner-carousel:active {
+  cursor: grabbing;
 }
 
 .major_announcement_btn {
