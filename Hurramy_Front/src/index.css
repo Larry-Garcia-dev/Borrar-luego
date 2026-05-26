@@ -445,6 +445,20 @@ input[type="range"] {
   background-repeat: no-repeat;
 }
 
+/* Dark overlay filter for campaign banners */
+.banner-carousel-campaign::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  z-index: 1;
+}
+
 .banner-carousel-campaign-content {
   position: absolute;
   bottom: 40px;
@@ -453,6 +467,7 @@ input[type="range"] {
   text-align: center;
   padding: 20px;
   max-width: 600px;
+  z-index: 2;
 }
 
 .banner-carousel-campaign-title {

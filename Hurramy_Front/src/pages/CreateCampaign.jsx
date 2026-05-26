@@ -124,8 +124,6 @@ function CreateCampaign() {
       });
 
       if (res.data.url) {
-        console.log('[v0] Banner uploaded, URL:', res.data.url);
-        console.log('[v0] getImageUrl result:', getImageUrl(res.data.url));
         setFormData(prev => ({ ...prev, bannerUrl: res.data.url }));
       }
     } catch (err) {
@@ -151,8 +149,6 @@ function CreateCampaign() {
       });
 
       if (res.data.url) {
-        console.log('[v0] Team picture uploaded, URL:', res.data.url);
-        console.log('[v0] getImageUrl result:', getImageUrl(res.data.url));
         updateTeamMember(index, 'pictureUrl', res.data.url);
       }
     } catch (err) {
