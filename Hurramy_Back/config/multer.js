@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
 
 // 2. Configurar fileFilter (se mantiene casi igual a tu versión anterior)
 const fileFilter = (req, file, cb) => {
-    if (file.fieldname === 'thumbnail' || file.fieldname === 'avatar' || file.fieldname === 'ai_image' || file.fieldname === 'team_picture') {
+    if (file.fieldname === 'thumbnail' || file.fieldname === 'avatar' || file.fieldname === 'ai_image' || file.fieldname === 'team_picture' || file.fieldname === 'campaign_banner') {
         const allowedImages = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
         if (allowedImages.includes(file.mimetype)) {
             cb(null, true);
@@ -73,10 +73,12 @@ if (useS3) {
             let prefix = 'file';
             let cleanName = '';
 
-            // Nombres aleatorios para la IA y team pictures
-            if (file.fieldname === 'ai_image' || file.fieldname === 'ai_audio' || file.fieldname === 'team_picture') {
+            // Nombres aleatorios para la IA, team pictures, y campaign banners
+            if (file.fieldname === 'ai_image' || file.fieldname === 'ai_audio' || file.fieldname === 'team_picture' || file.fieldname === 'campaign_banner') {
                 const randomName = Math.random().toString(36).substring(2, 7);
-                const folder = file.fieldname === 'team_picture' ? 'team-pictures/' : 'ai-media/';
+                let folder = 'ai-media/';
+                if (file.fieldname === 'team_picture') folder = 'team-pictures/';
+                if (file.fieldname === 'campaign_banner') folder = 'campaign-banners/';
                 return cb(null, `${folder}${randomName}${ext}`);
             }
 

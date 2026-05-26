@@ -20,4 +20,7 @@ router.delete('/:id', verifyToken, isAdmin, campaignController.deleteCampaign);
 // Upload team member picture
 router.post('/upload-team-picture', verifyToken, isAdmin, upload.single('team_picture'), campaignController.uploadTeamPicture);
 
+// Upload campaign banner (10:1 aspect ratio)
+router.post('/upload-banner', verifyToken, isAdmin, upload.single('campaign_banner'), campaignController.uploadCampaignBanner);
+
 module.exports = router;
