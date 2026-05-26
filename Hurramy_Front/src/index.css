@@ -3451,6 +3451,519 @@ body:has(.major_announcement) .right-panel {
 }
 
 /* ===================== */
+/* ENHANCED MOBILE RESPONSIVE */
+/* ===================== */
+
+/* Mobile Navigation - Bottom Tab Bar */
+@media (max-width: 768px) {
+  /* Header nav links - horizontal scroll on mobile */
+  .header-nav {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 0;
+    max-width: calc(100vw - 200px);
+  }
+
+  .header-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .header-nav-link {
+    padding: 6px 10px;
+    font-size: 12px;
+    min-height: 30px;
+  }
+
+  /* Hide upload button text on mobile */
+  .header-actions .iconBtn[title] span {
+    display: none;
+  }
+}
+
+/* Mobile Video Cards - Better Touch Targets */
+@media (max-width: 768px) {
+  .home-card {
+    border-radius: var(--r18);
+  }
+
+  .home-card-body {
+    padding: 12px;
+  }
+
+  .home-card-title {
+    font-size: 14px;
+    min-height: auto;
+    -webkit-line-clamp: 2;
+  }
+
+  .home-card-meta {
+    gap: 6px;
+  }
+
+  .home-card-badge {
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+
+  .home-card-actions {
+    margin-top: 8px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .home-card-action-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+    min-height: 32px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Campaign Detail - Mobile Optimized */
+@media (max-width: 768px) {
+  .campaign-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Stack video preview and controls */
+  .campaign-grid .panel {
+    border-radius: var(--r18);
+  }
+
+  /* Mobile-friendly preview actions */
+  .pActions {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px !important;
+  }
+
+  .pActions .btn {
+    font-size: 12px;
+    padding: 10px 8px;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  /* Leaderboard - Mobile Optimized */
+  .campaign-grid #rows {
+    max-height: none !important;
+  }
+
+  .campaign-grid .row {
+    grid-template-columns: 40px 1fr !important;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .campaign-grid .row .rank {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  /* Leaderboard video stats - stack on mobile */
+  .campaign-grid .row .chip {
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+
+  /* Campaign search input full width */
+  .campaign-search-input {
+    min-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Campaign header */
+  .campaign-grid .announce {
+    padding: 12px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Video Player - Mobile Optimized */
+@media (max-width: 768px) {
+  .video-player-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* Video meta section */
+  .video-player-grid .metaLine {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .video-player-grid .metaLine > div:last-child {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .video-player-grid .metaLine .btn,
+  .video-player-grid .metaLine .likeBtn {
+    flex: 1;
+    justify-content: center;
+    font-size: 11px;
+    padding: 8px 6px;
+  }
+
+  .video-player-grid .metaLine .likeBtn span.muted {
+    display: none;
+  }
+
+  /* Controls - larger touch targets */
+  .vp-controls {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .vp-controls-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .vp-icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Very small screens - extra optimizations */
+@media (max-width: 380px) {
+  :root {
+    --header-height: 54px;
+  }
+
+  .header-inner {
+    padding: 0 8px;
+    gap: 6px;
+  }
+
+  .header-brand img {
+    height: 28px;
+  }
+
+  .header-nav-link {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .header-actions {
+    gap: 4px;
+  }
+
+  .iconBtn,
+  .header-lang-btn,
+  .header-user-avatar {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  /* Video cards even more compact */
+  .home-card-thumb {
+    height: 140px;
+  }
+
+  .home-card-body {
+    padding: 10px;
+  }
+
+  .home-card-title {
+    font-size: 13px;
+  }
+
+  /* Campaign leaderboard - ultra compact */
+  .campaign-grid .row {
+    grid-template-columns: 36px 1fr !important;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .campaign-grid .row .rank {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+    border-radius: 12px;
+  }
+
+  /* Preview actions - single column */
+  .pActions {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Video player meta - stack everything */
+  .video-player-grid .metaLine > div:last-child {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Announcements */
+@media (max-width: 768px) {
+  .home-announce {
+    border-radius: var(--r18);
+    margin-bottom: 12px;
+  }
+
+  .home-announce-body {
+    padding: 10px 14px 14px;
+  }
+
+  .home-announce-name {
+    font-size: 15px;
+  }
+
+  .home-announce-desc {
+    font-size: 12px;
+  }
+
+  .home-announce-dates {
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .home-announce-dates span:nth-child(2) {
+    display: none; /* Hide | separator */
+  }
+
+  .home-announce-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .home-toggle-row {
+    gap: 8px;
+  }
+
+  .home-toggle-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Mobile Hero Section */
+@media (max-width: 768px) {
+  .home-hero {
+    padding: 16px;
+    border-radius: var(--r18);
+  }
+
+  .home-hero-title {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+
+  .home-hero-subtitle {
+    font-size: 13px;
+  }
+
+  .home-chips {
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .home-chip {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Major Announcement Banner - Mobile */
+@media (max-width: 768px) {
+  :root {
+    --major-announcement-height: clamp(140px, 18vw, 180px);
+  }
+
+  .major_announcement_btn {
+    bottom: 12px;
+    padding: 8px 14px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+
+  .major_announcement_modal {
+    width: min(95%, 100%);
+    max-height: 90vh;
+  }
+
+  .major_announcement_modal_body {
+    padding: 14px;
+    font-size: 13px;
+  }
+
+  .major_announcement_modal_body h3 {
+    font-size: 15px;
+  }
+
+  .major_announcement_modal_body h4 {
+    font-size: 13px;
+  }
+}
+
+/* Mobile Comments Section */
+@media (max-width: 768px) {
+  .card {
+    border-radius: var(--r14);
+    padding: 10px;
+  }
+
+  .commentList {
+    gap: 8px;
+  }
+
+  .comment {
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .comment .cName {
+    font-size: 12px;
+  }
+
+  .comment .cText {
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .comment .cTime {
+    font-size: 11px;
+  }
+}
+
+/* Mobile Form Elements */
+@media (max-width: 768px) {
+  .input,
+  textarea,
+  select {
+    padding: 12px 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    border-radius: 12px;
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 12px 16px;
+    font-size: 14px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn.primary {
+    font-size: 14px;
+  }
+}
+
+/* Campaign List - Mobile */
+@media (max-width: 600px) {
+  .campaign-list-header-content {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 14px;
+  }
+
+  .campaign-list-header-content .btn.primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Campaign cards in list */
+  .campaign-list-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Fix for iOS safe areas */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  @media (max-width: 768px) {
+    .toast {
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      bottom: 0;
+    }
+
+    .major_announcement_modal {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+}
+
+/* Smooth scrolling for mobile */
+@media (max-width: 768px) {
+  .home-main-pane,
+  main {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+
+  #root {
+    overflow-x: hidden;
+  }
+}
+
+/* ===================== */
+/* VIDEO PLAYER ACTIONS  */
+/* ===================== */
+
+.video-action-btn {
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.video-action-btn .action-label {
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .video-actions-row {
+    width: 100%;
+    justify-content: space-between !important;
+  }
+
+  .video-action-btn {
+    flex: 1;
+    justify-content: center !important;
+    padding: 10px 8px !important;
+    min-height: 44px;
+  }
+
+  .video-action-btn .action-label {
+    display: none;
+  }
+
+  .video-action-btn .count {
+    font-size: 13px;
+  }
+}
+
+/* ===================== */
+/* LEADERBOARD MOBILE    */
+/* ===================== */
+
+.leaderboard-row {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 600px) {
+  .leaderboard-row {
+    padding: 10px !important;
+    gap: 8px !important;
+  }
+}
+
+/* ===================== */
 /* DISCLAIMER MODAL      */
 /* ===================== */
 
