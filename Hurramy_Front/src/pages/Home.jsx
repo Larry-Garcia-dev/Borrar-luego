@@ -70,6 +70,11 @@ function Home() {
     loadVideos();
   }, []);
 
+  // Load campaigns for banner carousel and announcements
+  useEffect(() => {
+    loadCampaignAnnouncements();
+  }, []);
+
   useEffect(() => {
     applyFilters(searchQuery);
   }, [activeCategory, videos, searchQuery]);
@@ -150,7 +155,10 @@ function Home() {
         setAllAnnouncements([...endingFirst, ...rest, ...systemItems]);
 
         // Set banner campaigns (only campaigns with banners)
-        setBannerCampaigns(active);
+        const campaignsWithBanners = active.filter(c => c.bannerUrl);
+        console.log('[v0] Active campaigns:', active);
+        console.log('[v0] Campaigns with banners:', campaignsWithBanners);
+        setBannerCampaigns(campaignsWithBanners);
       })
       .catch(() => {
         // If campaigns fail, still show system announcements
@@ -868,7 +876,7 @@ function Home() {
                 <li>作者保留作品署名权。</li>
               </ul>
 
-              <h4>八、违规处理</h4>
+              <h4>八、���规处理</h4>
               <p>出现以下情况之一，组委会有权取消参赛资格：抄袭、剽窃作品；虚假报名资料；刷票、恶意操纵数据；发布违法或不当内容；影响赛事公平公正的行为。</p>
 
               <h4>九、赛事宣传主题建议</h4>
