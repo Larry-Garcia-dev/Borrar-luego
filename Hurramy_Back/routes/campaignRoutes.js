@@ -23,4 +23,7 @@ router.post('/upload-team-picture', verifyToken, isAdmin, upload.single('team_pi
 // Upload campaign banner (10:1 aspect ratio)
 router.post('/upload-banner', verifyToken, isAdmin, upload.single('campaign_banner'), campaignController.uploadCampaignBanner);
 
+// Upload campaign instructions image
+router.post('/upload-instructions', verifyToken, isAdmin, upload.single('campaign_instructions'), campaignController.uploadCampaignInstructions);
+
 module.exports = router;

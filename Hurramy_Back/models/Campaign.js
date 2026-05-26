@@ -18,6 +18,10 @@ const Campaign = sequelize.define('Campaign', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    instructionsImageUrl: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     startDate: {
         type: DataTypes.DATEONLY,
         allowNull: false
