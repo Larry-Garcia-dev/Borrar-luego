@@ -459,11 +459,14 @@ function Home() {
           </div>
 
           {/* Campaign Banners */}
-          {bannerCampaigns.map((campaign, idx) => (
+          {bannerCampaigns.map((campaign, idx) => {
+            const bannerUrl = getCampaignBannerUrl(campaign.bannerUrl);
+            console.log('[v0] Campaign:', campaign.name, 'bannerUrl:', campaign.bannerUrl, 'resolved:', bannerUrl);
+            return (
             <div 
               key={campaign.id}
               className={`banner-carousel-slide banner-carousel-campaign${bannerIdx === idx + 1 ? ' active' : ''}`}
-              style={campaign.bannerUrl ? { backgroundImage: `url(${getCampaignBannerUrl(campaign.bannerUrl)})` } : {}}
+              style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : {}}
             >
               <div className="banner-carousel-campaign-content">
                 <h2 className="banner-carousel-campaign-title">{campaign.name}</h2>
@@ -472,7 +475,8 @@ function Home() {
                 </Link>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Dots indicator */}
