@@ -156,8 +156,6 @@ function Home() {
 
         // Set banner campaigns (only campaigns with banners)
         const campaignsWithBanners = active.filter(c => c.bannerUrl);
-        console.log('[v0] Active campaigns:', active);
-        console.log('[v0] Campaigns with banners:', campaignsWithBanners);
         setBannerCampaigns(campaignsWithBanners);
       })
       .catch(() => {

@@ -776,6 +776,29 @@ function CampaignDetail() {
           </div>
         )}
 
+        {/* Campaign Instructions Image */}
+        {campaign.instructionsImageUrl && (
+          <div style={{
+            width: '100%',
+            height: 'auto',
+            marginBottom: '16px',
+            borderRadius: 'var(--r22)',
+            overflow: 'hidden',
+            border: '1px solid var(--line)',
+          }}>
+            <img
+              src={getMediaUrl(campaign.instructionsImageUrl)}
+              alt={`${campaign.name} Instructions`}
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+                objectFit: 'contain',
+              }}
+            />
+          </div>
+        )}
+
         <section className="announce" style={{
           position: 'relative',
           padding: '14px 16px',
