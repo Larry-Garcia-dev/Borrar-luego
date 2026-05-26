@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const campaignController = require('../controllers/campaignController');
 const { verifyToken, isAdmin } = require('../middleware/authMiddleware');
+const upload = require('../config/multer');
 
 // ========== RUTAS PUBLICAS (sin autenticacion) ==========
 router.get('/', campaignController.getActiveCampaigns);    // Listar campanas activas
@@ -15,5 +16,8 @@ router.post('/:id/join', verifyToken, campaignController.joinCampaign);
 router.post('/create', verifyToken, isAdmin, campaignController.createCampaign);
 router.put('/:id', verifyToken, isAdmin, campaignController.updateCampaign);
 router.delete('/:id', verifyToken, isAdmin, campaignController.deleteCampaign);
+
+// Upload team member picture
+router.post('/upload-team-picture', verifyToken, isAdmin, upload.single('team_picture'), campaignController.uploadTeamPicture);
 
 module.exports = router;

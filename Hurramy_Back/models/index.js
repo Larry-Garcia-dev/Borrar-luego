@@ -4,6 +4,7 @@ const Comment = require('./Comment');
 const Like = require('./Like');
 const Campaign = require('./Campaign');
 const Follow = require('./Follow');
+const CampaignTeamMember = require('./CampaignTeamMember');
 
 // --- Relaciones Usuario - Video ---
 User.hasMany(Video, { foreignKey: 'userId' });
@@ -44,11 +45,16 @@ Follow.belongsTo(User, { as: 'following', foreignKey: 'followingId' });
 Campaign.belongsToMany(Video, { through: 'CampaignVideos' });
 Video.belongsToMany(Campaign, { through: 'CampaignVideos' });
 
+// --- Relaciones Campaign Team Members ---
+Campaign.hasMany(CampaignTeamMember, { foreignKey: 'campaignId', as: 'teamMembers' });
+CampaignTeamMember.belongsTo(Campaign, { foreignKey: 'campaignId' });
+
 module.exports = {
     User,
     Video,
     Comment,
     Like,
     Campaign,
-    Follow
+    Follow,
+    CampaignTeamMember
 };

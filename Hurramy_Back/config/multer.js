@@ -31,7 +31,7 @@ const storage = multer.diskStorage({
 
 // 2. Configurar fileFilter (se mantiene casi igual a tu versión anterior)
 const fileFilter = (req, file, cb) => {
-    if (file.fieldname === 'thumbnail' || file.fieldname === 'avatar' || file.fieldname === 'ai_image') {
+    if (file.fieldname === 'thumbnail' || file.fieldname === 'avatar' || file.fieldname === 'ai_image' || file.fieldname === 'team_picture') {
         const allowedImages = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
         if (allowedImages.includes(file.mimetype)) {
             cb(null, true);
@@ -73,10 +73,11 @@ if (useS3) {
             let prefix = 'file';
             let cleanName = '';
 
-            // Nombres aleatorios para la IA
-            if (file.fieldname === 'ai_image' || file.fieldname === 'ai_audio') {
+            // Nombres aleatorios para la IA y team pictures
+            if (file.fieldname === 'ai_image' || file.fieldname === 'ai_audio' || file.fieldname === 'team_picture') {
                 const randomName = Math.random().toString(36).substring(2, 7);
-                return cb(null, `ai-media/${randomName}${ext}`);
+                const folder = file.fieldname === 'team_picture' ? 'team-pictures/' : 'ai-media/';
+                return cb(null, `${folder}${randomName}${ext}`);
             }
 
             // Para videos y thumbnails
