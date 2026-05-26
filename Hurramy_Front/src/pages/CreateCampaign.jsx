@@ -5,7 +5,6 @@ import { API_URL } from '../config';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { translations } from '../utils/translations';
-import { getThumbnailUrl } from '../utils/mediaUtils';
 
 function CreateCampaign() {
   const navigate = useNavigate();
@@ -97,6 +96,17 @@ function CreateCampaign() {
     const updated = [...teamMembers];
     updated[index][field] = value;
     setTeamMembers(updated);
+  };
+
+  // Helper function to get proper image URL
+  const getImageUrl = (url) => {
+    if (!url) return null;
+    // If it's already a full URL (S3 or external), return as is
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    // If it's a relative URL, prepend API_URL
+    return `${API_URL}${url.startsWith('/') ? '' : '/'}${url}`;
   };
 
   const handleTeamMemberPictureUpload = async (index, file) => {
@@ -334,20 +344,14 @@ function CreateCampaign() {
                           {member.pictureUrl ? (
                             <div style={{ position: 'relative' }}>
                               <img 
-                                src={getThumbnailUrl(member.pictureUrl) || member.pictureUrl} 
-                                alt={member.name}
+                                src={getImageUrl(member.pictureUrl)} 
+                                alt={member.name || 'Team member'}
                                 style={{ 
                                   width: '40px', 
                                   height: '50px', 
                                   objectFit: 'cover', 
                                   borderRadius: '8px',
                                   border: '1px solid var(--line)'
-                                }}
-                                onError={(e) => {
-                                  console.log('[v0] Image load error, trying API_URL prefix');
-                                  if (!e.target.src.startsWith(API_URL)) {
-                                    e.target.src = `${API_URL}${member.pictureUrl}`;
-                                  }
                                 }}
                               />
                               <button
