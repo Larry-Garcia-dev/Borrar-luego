@@ -467,9 +467,6 @@ function Home() {
             >
               <div className="banner-carousel-campaign-content">
                 <h2 className="banner-carousel-campaign-title">{campaign.name}</h2>
-                {campaign.description && (
-                  <p className="banner-carousel-campaign-desc">{campaign.description.substring(0, 100)}{campaign.description.length > 100 ? '...' : ''}</p>
-                )}
                 <Link to={`/campaign/${campaign.id}`} className="banner-carousel-campaign-btn">
                   {t.home?.viewCampaign || 'View Campaign'}
                 </Link>
@@ -869,7 +866,7 @@ function Home() {
               <h4>七、知识产权与授权</h4>
               <ul>
                 <li>参赛者保证拥有作品合法版权。</li>
-                <li>作品不得侵犯第三方知识产权。</li>
+                <li>作品不得侵犯第三方知识��权。</li>
                 <li>参赛作品授权组委会用于赛事宣传、展播及推广。</li>
                 <li>作者保留作品署名权。</li>
               </ul>

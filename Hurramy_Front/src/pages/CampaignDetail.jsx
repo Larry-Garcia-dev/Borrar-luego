@@ -754,28 +754,6 @@ function CampaignDetail() {
       <Header />
 
       <main className="wrap" style={{ maxWidth: '1180px', margin: '0 auto', padding: '18px' }}>
-        {/* Campaign Banner */}
-        {campaign.bannerUrl && (
-          <div style={{
-            width: '100%',
-            height: 'auto',
-            marginBottom: '16px',
-            borderRadius: 'var(--r22)',
-            overflow: 'hidden',
-          }}>
-            <img
-              src={getMediaUrl(campaign.bannerUrl)}
-              alt={campaign.name}
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'block',
-                objectFit: 'cover',
-              }}
-            />
-          </div>
-        )}
-
         {/* Campaign Instructions Image */}
         {campaign.instructionsImageUrl && (
           <div style={{
