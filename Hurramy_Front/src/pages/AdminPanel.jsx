@@ -489,8 +489,8 @@ function AdminPanel() {
                           >
                             {campaign.status === 'Active' ? (ap.deactivate || 'Deactivate') : (ap.activate || 'Activate')}
                           </button>
-                          <Link to={`/campaign/${campaign.id}`} className="btn" style={{ padding: '8px 14px', fontSize: '12px' }}>
-                            {ap.viewDetails || 'View Details'}
+                          <Link to={`/create-campaign?edit=${campaign.id}`} className="btn" style={{ padding: '8px 14px', fontSize: '12px' }}>
+                            {ap.editCampaign || 'Edit Campaign'}
                           </Link>
                           <button
                             className="btn"

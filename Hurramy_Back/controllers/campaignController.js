@@ -1,11 +1,11 @@
-const { Campaign, Video, User, Like } = require('../models');
+const { Campaign, Video, User, Like, CampaignTeamMember } = require('../models');
 const { formatMediaUrl } = require('../helpers/mediaHelper');
 const sequelize = require('../config/db');
 
 // 1. Crear Campaña (Admin)
 exports.createCampaign = async (req, res) => {
     try {
-        const { name, description, startDate, endDate } = req.body;
+        const { name, description, startDate, endDate, teamMembers } = req.body;
         const newCampaign = await Campaign.create({
             name,
             description,
@@ -13,7 +13,26 @@ exports.createCampaign = async (req, res) => {
             endDate,
             status: 'Active'
         });
-        res.status(201).json(newCampaign);
+
+        // Create team members if provided
+        if (teamMembers && Array.isArray(teamMembers) && teamMembers.length > 0) {
+            for (const member of teamMembers) {
+                await CampaignTeamMember.create({
+                    name: member.name,
+                    role: member.role,
+                    pictureUrl: member.pictureUrl || null,
+                    bio: member.bio || null,
+                    campaignId: newCampaign.id
+                });
+            }
+        }
+
+        // Fetch the campaign with team members
+        const campaignWithTeam = await Campaign.findByPk(newCampaign.id, {
+            include: [{ model: CampaignTeamMember, as: 'teamMembers' }]
+        });
+
+        res.status(201).json(campaignWithTeam);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -22,7 +41,10 @@ exports.createCampaign = async (req, res) => {
 // 2. Obtener todas las campañas activas
 exports.getActiveCampaigns = async (req, res) => {
     try {
-        const campaigns = await Campaign.findAll({ where: { status: 'Active' } });
+        const campaigns = await Campaign.findAll({ 
+            where: { status: 'Active' },
+            include: [{ model: CampaignTeamMember, as: 'teamMembers' }]
+        });
         res.json(campaigns);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -34,11 +56,17 @@ exports.getCampaignDetails = async (req, res) => {
     try {
         const { id } = req.params;
         const campaign = await Campaign.findByPk(id, {
-            include: [{
-                model: Video,
-                include: [User, Like], // Traer dueño y likes para contar
-                through: { attributes: [] } // Ocultar tabla intermedia
-            }]
+            include: [
+                {
+                    model: Video,
+                    include: [User, Like], // Traer dueño y likes para contar
+                    through: { attributes: [] } // Ocultar tabla intermedia
+                },
+                {
+                    model: CampaignTeamMember,
+                    as: 'teamMembers'
+                }
+            ]
         });
 
         if (!campaign) return res.status(404).json({ message: 'Campaña no encontrada' });
@@ -92,7 +120,7 @@ exports.joinCampaign = async (req, res) => {
 exports.updateCampaign = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, startDate, endDate, status } = req.body;
+        const { name, description, startDate, endDate, status, teamMembers } = req.body;
 
         const campaign = await Campaign.findByPk(id);
         if (!campaign) {
@@ -107,7 +135,30 @@ exports.updateCampaign = async (req, res) => {
         if (status !== undefined) campaign.status = status;
 
         await campaign.save();
-        res.json({ message: 'Campaña actualizada correctamente', campaign });
+
+        // Update team members if provided
+        if (teamMembers !== undefined && Array.isArray(teamMembers)) {
+            // Delete existing team members
+            await CampaignTeamMember.destroy({ where: { campaignId: id } });
+            
+            // Create new team members
+            for (const member of teamMembers) {
+                await CampaignTeamMember.create({
+                    name: member.name,
+                    role: member.role,
+                    pictureUrl: member.pictureUrl || null,
+                    bio: member.bio || null,
+                    campaignId: id
+                });
+            }
+        }
+
+        // Fetch updated campaign with team members
+        const updatedCampaign = await Campaign.findByPk(id, {
+            include: [{ model: CampaignTeamMember, as: 'teamMembers' }]
+        });
+
+        res.json({ message: 'Campaña actualizada correctamente', campaign: updatedCampaign });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -123,8 +174,26 @@ exports.deleteCampaign = async (req, res) => {
             return res.status(404).json({ message: 'Campaña no encontrada' });
         }
 
+        // Delete team members first
+        await CampaignTeamMember.destroy({ where: { campaignId: id } });
+
         await campaign.destroy();
         res.json({ message: 'Campaña eliminada correctamente' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// 7. Upload Team Member Picture
+exports.uploadTeamPicture = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        // Return the URL - handle both S3 and local storage
+        const url = req.file.location || `/uploads/${req.file.filename}`;
+        res.json({ url, message: 'Picture uploaded successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
