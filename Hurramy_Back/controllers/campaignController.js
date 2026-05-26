@@ -5,12 +5,13 @@ const sequelize = require('../config/db');
 // 1. Crear Campaña (Admin)
 exports.createCampaign = async (req, res) => {
     try {
-        const { name, description, startDate, endDate, teamMembers } = req.body;
+        const { name, description, startDate, endDate, bannerUrl, teamMembers } = req.body;
         const newCampaign = await Campaign.create({
             name,
             description,
             startDate,
             endDate,
+            bannerUrl: bannerUrl || null,
             status: 'Active'
         });
 
@@ -120,7 +121,7 @@ exports.joinCampaign = async (req, res) => {
 exports.updateCampaign = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, startDate, endDate, status, teamMembers } = req.body;
+        const { name, description, startDate, endDate, status, bannerUrl, teamMembers } = req.body;
 
         const campaign = await Campaign.findByPk(id);
         if (!campaign) {
@@ -133,6 +134,7 @@ exports.updateCampaign = async (req, res) => {
         if (startDate !== undefined) campaign.startDate = startDate;
         if (endDate !== undefined) campaign.endDate = endDate;
         if (status !== undefined) campaign.status = status;
+        if (bannerUrl !== undefined) campaign.bannerUrl = bannerUrl;
 
         await campaign.save();
 
@@ -194,6 +196,21 @@ exports.uploadTeamPicture = async (req, res) => {
         // Return the URL - handle both S3 and local storage
         const url = req.file.location || `/uploads/${req.file.filename}`;
         res.json({ url, message: 'Picture uploaded successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// 8. Upload Campaign Banner (10:1 aspect ratio)
+exports.uploadCampaignBanner = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        // Return the URL - handle both S3 and local storage
+        const url = req.file.location || `/uploads/${req.file.filename}`;
+        res.json({ url, message: 'Banner uploaded successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

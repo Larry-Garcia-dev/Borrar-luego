@@ -44,6 +44,11 @@ function Home() {
   const timerRef = useRef(null);
   const progressRef = useRef(null);
 
+  // Banner carousel state
+  const [bannerCampaigns, setBannerCampaigns] = useState([]);
+  const [bannerIdx, setBannerIdx] = useState(0);
+  const bannerTimerRef = useRef(null);
+
   const user = JSON.parse(localStorage.getItem('user'));
   const lang = localStorage.getItem('appLanguage') || 'en';
   const t = translations[lang] || translations.en;
@@ -141,10 +146,14 @@ function Home() {
         const endingFirst = campaignItems.filter(c => c.type === 'ending');
         const rest = campaignItems.filter(c => c.type !== 'ending');
         setAllAnnouncements([...endingFirst, ...rest, ...systemItems]);
+
+        // Set banner campaigns (only campaigns with banners)
+        setBannerCampaigns(active);
       })
       .catch(() => {
         // If campaigns fail, still show system announcements
         setAllAnnouncements(systemItems);
+        setBannerCampaigns([]);
       });
   };
 
@@ -171,6 +180,39 @@ function Home() {
     }, ROTATE_MS);
     return () => clearInterval(timerRef.current);
   }, [announceOpen, startProgress, totalAnn]);
+
+  // Banner carousel auto-rotation
+  const totalBannerSlides = bannerCampaigns.length + 1; // +1 for main banner
+  useEffect(() => {
+    if (totalBannerSlides <= 1) return;
+    bannerTimerRef.current = setInterval(() => {
+      setBannerIdx(prev => (prev + 1) % totalBannerSlides);
+    }, ROTATE_MS);
+    return () => clearInterval(bannerTimerRef.current);
+  }, [totalBannerSlides]);
+
+  const nextBanner = () => {
+    setBannerIdx(prev => (prev + 1) % totalBannerSlides);
+    clearInterval(bannerTimerRef.current);
+    bannerTimerRef.current = setInterval(() => {
+      setBannerIdx(prev => (prev + 1) % totalBannerSlides);
+    }, ROTATE_MS);
+  };
+
+  const prevBanner = () => {
+    setBannerIdx(prev => (prev - 1 + totalBannerSlides) % totalBannerSlides);
+    clearInterval(bannerTimerRef.current);
+    bannerTimerRef.current = setInterval(() => {
+      setBannerIdx(prev => (prev + 1) % totalBannerSlides);
+    }, ROTATE_MS);
+  };
+
+  // Helper to get campaign banner URL
+  const getCampaignBannerUrl = (url) => {
+    if (!url) return null;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `${API_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+  };
 
   const setAnn = (i) => {
     if (totalAnn === 0) return;
@@ -359,9 +401,72 @@ function Home() {
         />
       )}
 
-      {/* Banner image - hidden on mobile */}
-      <section className="major_announcement" aria-label="Major announcement">
-        {/* Banner image only - no button */}
+      {/* Banner Carousel - hidden on mobile */}
+      <section className="major_announcement banner-carousel" aria-label="Banner carousel">
+        {/* Navigation Arrows */}
+        {totalBannerSlides > 1 && (
+          <>
+            <button 
+              className="banner-carousel-arrow banner-carousel-prev" 
+              onClick={prevBanner}
+              aria-label="Previous slide"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <button 
+              className="banner-carousel-arrow banner-carousel-next" 
+              onClick={nextBanner}
+              aria-label="Next slide"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </>
+        )}
+
+        {/* Slides */}
+        <div className="banner-carousel-slides">
+          {/* Main Banner (index 0) */}
+          <div className={`banner-carousel-slide${bannerIdx === 0 ? ' active' : ''}`}>
+            {/* Default banner background from CSS */}
+          </div>
+
+          {/* Campaign Banners */}
+          {bannerCampaigns.map((campaign, idx) => (
+            <div 
+              key={campaign.id}
+              className={`banner-carousel-slide banner-carousel-campaign${bannerIdx === idx + 1 ? ' active' : ''}`}
+              style={campaign.bannerUrl ? { backgroundImage: `url(${getCampaignBannerUrl(campaign.bannerUrl)})` } : {}}
+            >
+              <div className="banner-carousel-campaign-content">
+                <h2 className="banner-carousel-campaign-title">{campaign.name}</h2>
+                {campaign.description && (
+                  <p className="banner-carousel-campaign-desc">{campaign.description.substring(0, 100)}{campaign.description.length > 100 ? '...' : ''}</p>
+                )}
+                <Link to={`/campaign/${campaign.id}`} className="banner-carousel-campaign-btn">
+                  {t.home?.viewCampaign || 'View Campaign'}
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Dots indicator */}
+        {totalBannerSlides > 1 && (
+          <div className="banner-carousel-dots">
+            {Array.from({ length: totalBannerSlides }).map((_, i) => (
+              <button
+                key={i}
+                className={`banner-carousel-dot${bannerIdx === i ? ' active' : ''}`}
+                onClick={() => setBannerIdx(i)}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       <div className="app-layout">

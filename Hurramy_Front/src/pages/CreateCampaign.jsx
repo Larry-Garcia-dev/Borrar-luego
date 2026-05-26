@@ -18,7 +18,8 @@ function CreateCampaign() {
     name: '',
     description: '',
     startDate: '',
-    endDate: ''
+    endDate: '',
+    bannerUrl: ''
   });
 
   // Team members state
@@ -58,7 +59,8 @@ function CreateCampaign() {
         name: campaign.name || '',
         description: campaign.description || '',
         startDate: campaign.startDate || '',
-        endDate: campaign.endDate || ''
+        endDate: campaign.endDate || '',
+        bannerUrl: campaign.bannerUrl || ''
       });
 
       // Load team members if they exist
@@ -107,6 +109,32 @@ function CreateCampaign() {
     }
     // If it's a relative URL, prepend API_URL
     return `${API_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+  };
+
+  // Banner upload handler
+  const handleBannerUpload = async (file) => {
+    if (!file) return;
+
+    const formDataUpload = new FormData();
+    formDataUpload.append('campaign_banner', file);
+
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.post(`${API_URL}/campaigns/upload-banner`, formDataUpload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (res.data.url) {
+        setFormData(prev => ({ ...prev, bannerUrl: res.data.url }));
+      }
+    } catch (err) {
+      console.error('Error uploading banner:', err);
+      setError(ct.uploadError || 'Error uploading banner');
+      setTimeout(() => setError(''), 3000);
+    }
   };
 
   const handleTeamMemberPictureUpload = async (index, file) => {
@@ -168,7 +196,7 @@ function CreateCampaign() {
           }
         });
         setMessage(ct.successMsg || 'Campaign created successfully!');
-        setFormData({ name: '', description: '', startDate: '', endDate: '' });
+        setFormData({ name: '', description: '', startDate: '', endDate: '', bannerUrl: '' });
         setTeamMembers([]);
       }
       
@@ -250,6 +278,85 @@ function CreateCampaign() {
                   required
                   style={{ width: '100%', minHeight: '120px', resize: 'vertical' }}
                 />
+              </div>
+
+              {/* Campaign Banner */}
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>
+                  {ct.bannerLabel || 'Campaign Banner (size: 10 x 1)'}
+                </label>
+                <div style={{ 
+                  border: '1px dashed var(--line)', 
+                  borderRadius: '12px', 
+                  padding: '16px',
+                  background: 'rgba(0,0,0,0.2)'
+                }}>
+                  {formData.bannerUrl ? (
+                    <div style={{ position: 'relative' }}>
+                      <img 
+                        src={getImageUrl(formData.bannerUrl)} 
+                        alt="Campaign Banner"
+                        style={{ 
+                          width: '100%', 
+                          height: 'auto',
+                          maxHeight: '100px',
+                          objectFit: 'cover', 
+                          borderRadius: '8px',
+                          border: '1px solid var(--line)'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, bannerUrl: '' }))}
+                        style={{
+                          position: 'absolute',
+                          top: '-8px',
+                          right: '-8px',
+                          width: '24px',
+                          height: '24px',
+                          borderRadius: '50%',
+                          background: 'var(--bad)',
+                          border: 'none',
+                          color: 'white',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '14px'
+                        }}
+                      >
+                        x
+                      </button>
+                    </div>
+                  ) : (
+                    <label style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center', 
+                      gap: '8px',
+                      cursor: 'pointer',
+                      padding: '20px'
+                    }}>
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                      </svg>
+                      <span className="muted" style={{ fontSize: '13px' }}>
+                        {ct.uploadBanner || 'Click to upload banner image'}
+                      </span>
+                      <span className="muted" style={{ fontSize: '11px' }}>
+                        10:1 ratio recommended (e.g. 1000x100px)
+                      </span>
+                      <input 
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleBannerUpload(e.target.files[0])}
+                        style={{ display: 'none' }}
+                      />
+                    </label>
+                  )}
+                </div>
               </div>
 
               {/* Campaign Organizer Team Section */}
