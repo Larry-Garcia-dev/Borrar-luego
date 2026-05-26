@@ -536,12 +536,12 @@ function CampaignDetail() {
           {filteredVideos.map((video, index) => (
               <div
                 key={video.id}
-                className="row"
+                className="row leaderboard-row"
                 onClick={() => handlePreviewSelect(video)}
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: '54px 1fr',
-                  gap: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
                   padding: '12px',
                   borderRadius: '18px',
                   border: previewVideo?.id === video.id
@@ -555,78 +555,60 @@ function CampaignDetail() {
                   transition: 'transform 0.15s ease, background 0.15s ease, border-color 0.15s ease',
                 }}
               >
-                <div className="rank" style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '16px',
-                  display: 'grid',
-                  placeItems: 'center',
-                  fontWeight: 900,
-                  background: index < 3
-                    ? 'linear-gradient(135deg, rgba(124,92,255,0.3), rgba(25,211,255,0.2))'
-                    : 'rgba(124,92,255,0.18)',
-                  border: '1px solid rgba(124,92,255,0.26)',
-                  color: 'rgba(234,240,255,0.92)',
-                  fontSize: index < 3 ? '18px' : '14px',
-                  flexShrink: 0,
-                }}>
-                  {getRankBadge(index)}
-                </div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
-                    <div style={{
-                      width: '58px',
-                      height: '42px',
-                      borderRadius: '10px',
-                      border: '1px solid var(--line)',
-                      overflow: 'hidden',
-                      flex: '0 0 58px',
-                      background: 'rgba(0,0,0,0.22)',
+                {/* Top row: Rank, Thumbnail, Points */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div className="rank" style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '12px',
+                    display: 'grid',
+                    placeItems: 'center',
+                    fontWeight: 900,
+                    background: index < 3
+                      ? 'linear-gradient(135deg, rgba(124,92,255,0.3), rgba(25,211,255,0.2))'
+                      : 'rgba(124,92,255,0.18)',
+                    border: '1px solid rgba(124,92,255,0.26)',
+                    color: 'rgba(234,240,255,0.92)',
+                    fontSize: index < 3 ? '16px' : '13px',
+                    flexShrink: 0,
+                  }}>
+                    {getRankBadge(index)}
+                  </div>
+                  <div style={{
+                    width: '54px',
+                    height: '40px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--line)',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                    background: 'rgba(0,0,0,0.22)',
+                  }}>
+                    {renderVideoThumb(video)}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ 
+                      margin: 0, 
+                      fontSize: '13px', 
+                      fontWeight: 800, 
+                      overflow: 'hidden', 
+                      textOverflow: 'ellipsis', 
+                      whiteSpace: 'nowrap',
+                      color: 'var(--text)'
                     }}>
-                      {renderVideoThumb(video)}
-                    </div>
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      minWidth: 0,
-                      flex: '1 1 auto',
-                      flexWrap: 'nowrap',
-                      fontSize: '11px',
-                      color: 'rgba(234,240,255,0.82)',
-                    }}>
-                      <span className="chip" style={{
-                        padding: '3px 6px',
-                        borderRadius: '999px',
-                        border: '1px solid var(--line)',
-                        background: 'rgba(255,255,255,0.04)',
-                        fontVariantNumeric: 'tabular-nums',
-                        whiteSpace: 'nowrap',
-                      }}>
-                        ❤️ {formatNumber(getLikeCount(video))} {cd.likes || 'likes'}
-                      </span>
-                      <span className="chip" style={{
-                        padding: '3px 6px',
-                        borderRadius: '999px',
-                        border: '1px solid var(--line)',
-                        background: 'rgba(255,255,255,0.04)',
-                        fontVariantNumeric: 'tabular-nums',
-                        whiteSpace: 'nowrap',
-                      }}>
-                        🌸 {formatNumber(getFlowerCount(video))} {cd.flowers || 'flowers'}
-                      </span>
-                    </div>
-                    <div style={{
-                      minWidth: '74px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-end',
-                      justifyContent: 'center',
-                      gap: '2px',
-                      fontVariantNumeric: 'tabular-nums',
-                      flex: '0 0 auto',
-                      marginLeft: 'auto',
-                    }}>
+                      {video.title}
+                    </p>
+                    <span style={{ fontSize: '11px', color: 'var(--muted)' }}>
+                      @{video.User?.email?.split('@')[0] || 'User'}
+                    </span>
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-end',
+                    gap: '2px',
+                    fontVariantNumeric: 'tabular-nums',
+                    flexShrink: 0,
+                  }}>
                       <strong style={{ fontSize: '16px', lineHeight: 1, color: '#19D3FF' }}>
                         {formatNumber(getPointCount(video))}
                       </strong>
@@ -635,25 +617,45 @@ function CampaignDetail() {
                       </span>
                     </div>
                   </div>
-                  <p className="title" style={{ margin: '8px 0 0', fontSize: '13px', fontWeight: 900, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {video.title}
-                  </p>
-                  <div className="meta" style={{ marginTop: '6px', fontSize: '12px', color: 'rgba(234,240,255,0.72)', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                
+                {/* Bottom row: Stats */}
+                <div style={{ 
+                  display: 'flex', 
+                  gap: '8px', 
+                  flexWrap: 'wrap',
+                  paddingLeft: '50px'
+                }}>
+                  <span className="chip" style={{
+                    padding: '4px 8px',
+                    borderRadius: '999px',
+                    border: '1px solid var(--line)',
+                    background: 'rgba(255,255,255,0.04)',
+                    fontSize: '11px',
+                    fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    ❤️ {formatNumber(getLikeCount(video))}
+                  </span>
+                  <span className="chip" style={{
+                    padding: '4px 8px',
+                    borderRadius: '999px',
+                    border: '1px solid var(--line)',
+                    background: 'rgba(255,255,255,0.04)',
+                    fontSize: '11px',
+                    fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    🌸 {formatNumber(getFlowerCount(video))}
+                  </span>
+                  {video.category && (
                     <span className="chip" style={{
-                      padding: '3px 8px',
+                      padding: '4px 8px',
                       borderRadius: '999px',
                       border: '1px solid var(--line)',
                       background: 'rgba(255,255,255,0.04)',
-                    }}>@{video.User?.email?.split('@')[0] || 'User'}</span>
-                    {video.category && (
-                      <span className="chip" style={{
-                        padding: '3px 8px',
-                        borderRadius: '999px',
-                        border: '1px solid var(--line)',
-                        background: 'rgba(255,255,255,0.04)',
-                      }}>{video.category}</span>
-                    )}
-                  </div>
+                      fontSize: '11px',
+                    }}>
+                      {video.category}
+                    </span>
+                  )}
                 </div>
               </div>
           ))}
