@@ -5,6 +5,7 @@ import { API_URL } from '../config';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { translations } from '../utils/translations';
+import { getThumbnailUrl } from '../utils/mediaUtils';
 
 function CreateCampaign() {
   const navigate = useNavigate();
@@ -333,7 +334,7 @@ function CreateCampaign() {
                           {member.pictureUrl ? (
                             <div style={{ position: 'relative' }}>
                               <img 
-                                src={member.pictureUrl} 
+                                src={getThumbnailUrl(member.pictureUrl) || member.pictureUrl} 
                                 alt={member.name}
                                 style={{ 
                                   width: '40px', 
@@ -341,6 +342,12 @@ function CreateCampaign() {
                                   objectFit: 'cover', 
                                   borderRadius: '8px',
                                   border: '1px solid var(--line)'
+                                }}
+                                onError={(e) => {
+                                  console.log('[v0] Image load error, trying API_URL prefix');
+                                  if (!e.target.src.startsWith(API_URL)) {
+                                    e.target.src = `${API_URL}${member.pictureUrl}`;
+                                  }
                                 }}
                               />
                               <button
