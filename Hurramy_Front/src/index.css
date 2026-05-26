@@ -4112,15 +4112,18 @@ body:has(.major_announcement) .right-panel {
 }
 
 /* Instructions button hide on scroll */
+.major_announcement {
+  transition: opacity 0.2s ease, transform 0.2s ease, max-height 0.2s ease, margin 0.2s ease, padding 0.2s ease;
+  overflow: hidden;
+}
+
 .major_announcement.hidden {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-10px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.major_announcement {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* ===================== */
