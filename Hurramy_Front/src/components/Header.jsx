@@ -17,6 +17,7 @@ function Header({ onSearch, onToggleSidebar, videos = [], initialQuery = '', onS
   const storedLang = localStorage.getItem('appLanguage') || (user?.language) || 'en';
 
   const [currentLang, setCurrentLang] = useState(storedLang);
+  const [activeCampaigns, setActiveCampaigns] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
   const langRef = useRef(null);
@@ -132,6 +133,19 @@ function Header({ onSearch, onToggleSidebar, videos = [], initialQuery = '', onS
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Fetch active campaigns for mobile menu
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/campaigns`);
+        setActiveCampaigns(res.data || []);
+      } catch (err) {
+        console.error('Error fetching campaigns:', err);
+      }
+    };
+    fetchCampaigns();
   }, []);
 
   // Dynamic scroll show/hide for mobile search bar
@@ -654,6 +668,28 @@ function Header({ onSearch, onToggleSidebar, videos = [], initialQuery = '', onS
           {IconCampaigns}
           <span>{t.sidebar?.campaigns || 'Campaigns'}</span>
         </Link>
+
+        {/* Active Campaigns List */}
+        {activeCampaigns.length > 0 && (
+          <>
+            <div className="mobile-nav-separator" />
+            <div className="mobile-nav-section-title">{t.sidebar?.activeCampaigns || 'Active Campaigns'}</div>
+            {activeCampaigns.map((campaign) => (
+              <Link
+                key={campaign.id}
+                to={`/campaign/${campaign.id}`}
+                className={`mobile-nav-link mobile-nav-campaign${location.pathname === `/campaign/${campaign.id}` ? ' active' : ''}`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+                <span>{campaign.name}</span>
+              </Link>
+            ))}
+          </>
+        )}
+
         <Link 
           to="/upload" 
           className={`mobile-nav-link${location.pathname === '/upload' ? ' active' : ''}`}
