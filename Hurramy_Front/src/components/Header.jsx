@@ -148,10 +148,9 @@ function Header({ onSearch, onToggleSidebar, videos = [], initialQuery = '', onS
       }
 
       if (currentY > lastScrollY.current && currentY > 60) {
-        setMobileSearchVisible(false);
+        // Keep search bar always visible, only notify parent for other uses
         if (onScrollChange) onScrollChange(false);
       } else {
-        setMobileSearchVisible(true);
         if (onScrollChange) onScrollChange(true);
       }
       lastScrollY.current = currentY;
