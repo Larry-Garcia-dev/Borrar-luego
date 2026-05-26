@@ -4102,22 +4102,15 @@ body:has(.major_announcement) .right-panel {
   }
 }
 
-/* Instructions button hide on scroll - ONLY on mobile */
+/* Hide major announcement completely on mobile */
 @media (max-width: 768px) {
   .major_announcement {
-    transition: opacity 0.2s ease, transform 0.2s ease, max-height 0.2s ease, margin 0.2s ease, padding 0.2s ease;
-    overflow: hidden;
-  }
-
-  .major_announcement.hidden {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-10px);
-    max-height: 0 !important;
+    display: none !important;
     height: 0 !important;
+    max-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
-    z-index: -1;
+    overflow: hidden;
   }
 }
 
