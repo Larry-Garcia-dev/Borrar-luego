@@ -11,6 +11,7 @@ import { API_URL } from '../config';
 import { getVideoUrl, getThumbnailUrl, getMediaUrl } from '../utils/mediaUtils';
 
 const ROTATE_MS = 6000;
+const BANNER_ROTATE_MS = 5000; // Banner carousel rotation time
 const ENDING_SOON_DAYS = 3; // campaigns ending within 3 days get special color
 
 function Home() {
@@ -48,6 +49,7 @@ function Home() {
   const [bannerCampaigns, setBannerCampaigns] = useState([]);
   const [bannerIdx, setBannerIdx] = useState(0);
   const bannerTimerRef = useRef(null);
+  const bannerDragRef = useRef({ startX: 0, isDragging: false });
 
   const user = JSON.parse(localStorage.getItem('user'));
   const lang = localStorage.getItem('appLanguage') || 'en';
@@ -181,13 +183,13 @@ function Home() {
     return () => clearInterval(timerRef.current);
   }, [announceOpen, startProgress, totalAnn]);
 
-  // Banner carousel auto-rotation
+  // Banner carousel auto-rotation (5 seconds)
   const totalBannerSlides = bannerCampaigns.length + 1; // +1 for main banner
   useEffect(() => {
     if (totalBannerSlides <= 1) return;
     bannerTimerRef.current = setInterval(() => {
       setBannerIdx(prev => (prev + 1) % totalBannerSlides);
-    }, ROTATE_MS);
+    }, BANNER_ROTATE_MS);
     return () => clearInterval(bannerTimerRef.current);
   }, [totalBannerSlides]);
 
@@ -196,7 +198,7 @@ function Home() {
     clearInterval(bannerTimerRef.current);
     bannerTimerRef.current = setInterval(() => {
       setBannerIdx(prev => (prev + 1) % totalBannerSlides);
-    }, ROTATE_MS);
+    }, BANNER_ROTATE_MS);
   };
 
   const prevBanner = () => {
@@ -204,7 +206,41 @@ function Home() {
     clearInterval(bannerTimerRef.current);
     bannerTimerRef.current = setInterval(() => {
       setBannerIdx(prev => (prev + 1) % totalBannerSlides);
-    }, ROTATE_MS);
+    }, BANNER_ROTATE_MS);
+  };
+
+  // Mouse drag handlers for banner carousel
+  const handleBannerMouseDown = (e) => {
+    bannerDragRef.current.startX = e.clientX;
+    bannerDragRef.current.isDragging = true;
+    clearInterval(bannerTimerRef.current);
+  };
+
+  const handleBannerMouseUp = (e) => {
+    if (!bannerDragRef.current.isDragging) return;
+    const diff = e.clientX - bannerDragRef.current.startX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        prevBanner();
+      } else {
+        nextBanner();
+      }
+    } else {
+      // Restart timer if no slide change
+      bannerTimerRef.current = setInterval(() => {
+        setBannerIdx(prev => (prev + 1) % totalBannerSlides);
+      }, BANNER_ROTATE_MS);
+    }
+    bannerDragRef.current.isDragging = false;
+  };
+
+  const handleBannerMouseLeave = () => {
+    if (bannerDragRef.current.isDragging) {
+      bannerDragRef.current.isDragging = false;
+      bannerTimerRef.current = setInterval(() => {
+        setBannerIdx(prev => (prev + 1) % totalBannerSlides);
+      }, BANNER_ROTATE_MS);
+    }
   };
 
   // Helper to get campaign banner URL - uses centralized mediaUtils
@@ -401,31 +437,14 @@ function Home() {
       )}
 
       {/* Banner Carousel - hidden on mobile */}
-      <section className="major_announcement banner-carousel" aria-label="Banner carousel">
-        {/* Navigation Arrows */}
-        {totalBannerSlides > 1 && (
-          <>
-            <button 
-              className="banner-carousel-arrow banner-carousel-prev" 
-              onClick={prevBanner}
-              aria-label="Previous slide"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6"/>
-              </svg>
-            </button>
-            <button 
-              className="banner-carousel-arrow banner-carousel-next" 
-              onClick={nextBanner}
-              aria-label="Next slide"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
-            </button>
-          </>
-        )}
-
+      <section 
+        className="major_announcement banner-carousel" 
+        aria-label="Banner carousel"
+        onMouseDown={handleBannerMouseDown}
+        onMouseUp={handleBannerMouseUp}
+        onMouseLeave={handleBannerMouseLeave}
+        style={{ cursor: totalBannerSlides > 1 ? 'grab' : 'default' }}
+      >
         {/* Slides */}
         <div className="banner-carousel-slides">
           {/* Main Banner (index 0) */}
