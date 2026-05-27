@@ -25,6 +25,8 @@ function CampaignDetail() {
   const [lastUpdated, setLastUpdated] = useState('');
   const shouldAutoplayPreview = useRef(false);
   const previewVideoRef = useRef(null);
+  const [showInstructionsModal, setShowInstructionsModal] = useState(false);
+  const [showJudgesPanel, setShowJudgesPanel] = useState(false);
 
   const user = JSON.parse(localStorage.getItem('user'));
   const lang = localStorage.getItem('appLanguage') || 'en';
@@ -754,29 +756,6 @@ function CampaignDetail() {
       <Header />
 
       <main className="wrap" style={{ maxWidth: '1180px', margin: '0 auto', padding: '18px' }}>
-        {/* Campaign Instructions Image */}
-        {campaign.instructionsImageUrl && (
-          <div style={{
-            width: '100%',
-            height: 'auto',
-            marginBottom: '16px',
-            borderRadius: 'var(--r22)',
-            overflow: 'hidden',
-            border: '1px solid var(--line)',
-          }}>
-            <img
-              src={getMediaUrl(campaign.instructionsImageUrl)}
-              alt={`${campaign.name} Instructions`}
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'block',
-                objectFit: 'contain',
-              }}
-            />
-          </div>
-        )}
-
         <section className="announce" style={{
           position: 'relative',
           padding: '14px 16px',
@@ -817,6 +796,50 @@ function CampaignDetail() {
             </h1>
           </div>
 
+          {/* Instructions & Judges Buttons */}
+          <div style={{ display: 'flex', gap: '8px', flex: '0 0 auto' }}>
+            {campaign.instructionsImageUrl && (
+              <button
+                onClick={() => setShowInstructionsModal(true)}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  border: '1px solid rgba(234,240,255,0.3)',
+                  background: 'rgba(0,0,0,0.3)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseOver={(e) => e.currentTarget.style.background = 'rgba(124,92,255,0.3)'}
+                onMouseOut={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.3)'}
+              >
+                {cd.instructions || 'Instructions'}
+              </button>
+            )}
+            {campaign.TeamMembers && campaign.TeamMembers.length > 0 && (
+              <button
+                onClick={() => setShowJudgesPanel(!showJudgesPanel)}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  border: showJudgesPanel ? '1px solid rgba(124,92,255,0.6)' : '1px solid rgba(234,240,255,0.3)',
+                  background: showJudgesPanel ? 'rgba(124,92,255,0.3)' : 'rgba(0,0,0,0.3)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseOver={(e) => { if (!showJudgesPanel) e.currentTarget.style.background = 'rgba(124,92,255,0.3)'; }}
+                onMouseOut={(e) => { if (!showJudgesPanel) e.currentTarget.style.background = 'rgba(0,0,0,0.3)'; }}
+              >
+                {cd.judges || 'Judges'}
+              </button>
+            )}
+          </div>
+
           <div style={{
             flex: '0 0 auto',
             minWidth: '220px',
@@ -845,6 +868,81 @@ function CampaignDetail() {
             </div>
           </div>
         </section>
+
+        {/* Judges Panel - Shows below header when Judges button is clicked */}
+        {showJudgesPanel && campaign.TeamMembers && campaign.TeamMembers.length > 0 && (
+          <section style={{
+            marginTop: '16px',
+            padding: '20px',
+            borderRadius: 'var(--r22)',
+            border: '1px solid rgba(234,240,255,0.14)',
+            background: `
+              radial-gradient(600px 300px at 30% 50%, rgba(124,92,255,0.15), transparent 60%),
+              radial-gradient(500px 300px at 70% 50%, rgba(25,211,255,0.12), transparent 60%),
+              rgba(0,0,0,0.3)
+            `,
+          }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+              gap: '20px',
+            }}>
+              {campaign.TeamMembers.map((member, idx) => (
+                <div key={idx} style={{
+                  textAlign: 'center',
+                  padding: '16px',
+                  borderRadius: '16px',
+                  background: 'rgba(0,0,0,0.2)',
+                  border: '1px solid rgba(234,240,255,0.1)',
+                }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    margin: '0 auto 12px',
+                    overflow: 'hidden',
+                    background: 'rgba(124,92,255,0.2)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    {member.pictureUrl ? (
+                      <img 
+                        src={getMediaUrl(member.pictureUrl)} 
+                        alt={member.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(234,240,255,0.5)" strokeWidth="1.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                      </svg>
+                    )}
+                  </div>
+                  <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>
+                    {member.name}
+                  </div>
+                  <div style={{ 
+                    fontSize: '13px', 
+                    color: 'rgba(234,240,255,0.7)',
+                    marginBottom: '8px',
+                  }}>
+                    {cd.role || 'Role'}: {member.role || (cd.organizer || 'Organizer / Judge')}
+                  </div>
+                  {member.bio && (
+                    <div style={{ 
+                      fontSize: '12px', 
+                      color: 'rgba(234,240,255,0.6)',
+                      lineHeight: 1.4,
+                    }}>
+                      {member.bio}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
 
         <section className="campaign-grid">
@@ -952,6 +1050,69 @@ function CampaignDetail() {
       <div className={`toast ${toast.show ? 'show' : ''}`}>
         {toast.message}
       </div>
+
+      {/* Instructions Modal */}
+      {showInstructionsModal && campaign.instructionsImageUrl && (
+        <div 
+          onClick={() => setShowInstructionsModal(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '20px',
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              borderRadius: '16px',
+              overflow: 'hidden',
+              background: 'var(--bg)',
+              border: '1px solid rgba(234,240,255,0.2)',
+            }}
+          >
+            <button
+              onClick={() => setShowInstructionsModal(false)}
+              style={{
+                position: 'absolute',
+                top: '12px',
+                right: '12px',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                background: 'rgba(0,0,0,0.6)',
+                border: 'none',
+                color: 'white',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '20px',
+                zIndex: 10,
+              }}
+            >
+              &times;
+            </button>
+            <img
+              src={getMediaUrl(campaign.instructionsImageUrl)}
+              alt={`${campaign.name} Instructions`}
+              style={{
+                display: 'block',
+                maxWidth: '100%',
+                maxHeight: '85vh',
+                objectFit: 'contain',
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -440,6 +440,7 @@ input[type="range"] {
 }
 
 .banner-carousel-campaign {
+  background: none !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;

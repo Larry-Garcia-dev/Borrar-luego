@@ -462,7 +462,6 @@ function Home() {
           {/* Campaign Banners */}
           {bannerCampaigns.map((campaign, idx) => {
             const bannerUrl = getCampaignBannerUrl(campaign.bannerUrl);
-            console.log('[v0] Campaign:', campaign.name, 'bannerUrl:', campaign.bannerUrl, 'resolved:', bannerUrl);
             return (
             <div 
               key={campaign.id}
