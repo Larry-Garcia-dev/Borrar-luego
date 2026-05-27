@@ -835,7 +835,7 @@ function CampaignDetail() {
                 onMouseOver={(e) => { if (!showJudgesPanel) e.currentTarget.style.background = 'rgba(124,92,255,0.3)'; }}
                 onMouseOut={(e) => { if (!showJudgesPanel) e.currentTarget.style.background = 'rgba(0,0,0,0.3)'; }}
               >
-                {cd.judges || 'Judges'}
+                {cd.team || 'Organizers & Judges'}
               </button>
             )}
           </div>
@@ -869,7 +869,7 @@ function CampaignDetail() {
           </div>
         </section>
 
-        {/* Judges Panel - Shows below header when Judges button is clicked */}
+        {/* Team Panel - Shows Organizers and Judges when button is clicked */}
         {showJudgesPanel && campaign.TeamMembers && campaign.TeamMembers.length > 0 && (
           <section style={{
             marginTop: '16px',
@@ -882,29 +882,60 @@ function CampaignDetail() {
               rgba(0,0,0,0.3)
             `,
           }}>
+            <h3 style={{ 
+              margin: '0 0 16px 0', 
+              fontSize: '16px', 
+              fontWeight: 600,
+              color: 'rgba(234,240,255,0.9)',
+            }}>
+              {cd.campaignTeam || 'Campaign Organizer Team'}
+            </h3>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
               gap: '20px',
             }}>
               {campaign.TeamMembers.map((member, idx) => (
                 <div key={idx} style={{
                   textAlign: 'center',
-                  padding: '16px',
+                  padding: '20px 16px',
                   borderRadius: '16px',
-                  background: 'rgba(0,0,0,0.2)',
-                  border: '1px solid rgba(234,240,255,0.1)',
+                  background: 'rgba(0,0,0,0.25)',
+                  border: '1px solid rgba(234,240,255,0.12)',
+                  transition: 'all 0.2s ease',
                 }}>
+                  {/* Role Badge */}
                   <div style={{
-                    width: '80px',
-                    height: '80px',
+                    display: 'inline-block',
+                    padding: '4px 12px',
+                    borderRadius: '12px',
+                    background: member.role?.toLowerCase().includes('judge') 
+                      ? 'rgba(255,179,71,0.2)' 
+                      : 'rgba(124,92,255,0.2)',
+                    color: member.role?.toLowerCase().includes('judge') 
+                      ? '#FFB347' 
+                      : '#A78BFA',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                    marginBottom: '12px',
+                  }}>
+                    {member.role || (cd.organizer || 'Organizer')}
+                  </div>
+                  
+                  {/* Profile Picture */}
+                  <div style={{
+                    width: '90px',
+                    height: '90px',
                     borderRadius: '50%',
-                    margin: '0 auto 12px',
+                    margin: '0 auto 14px',
                     overflow: 'hidden',
-                    background: 'rgba(124,92,255,0.2)',
+                    background: 'rgba(124,92,255,0.15)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    border: '2px solid rgba(234,240,255,0.15)',
                   }}>
                     {member.pictureUrl ? (
                       <img 
@@ -913,27 +944,31 @@ function CampaignDetail() {
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                     ) : (
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(234,240,255,0.5)" strokeWidth="1.5">
+                      <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="rgba(234,240,255,0.4)" strokeWidth="1.5">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                         <circle cx="12" cy="7" r="4"/>
                       </svg>
                     )}
                   </div>
-                  <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>
+                  
+                  {/* Name */}
+                  <div style={{ 
+                    fontWeight: 600, 
+                    fontSize: '16px', 
+                    marginBottom: '8px',
+                    color: 'rgba(234,240,255,0.95)',
+                  }}>
                     {member.name}
                   </div>
-                  <div style={{ 
-                    fontSize: '13px', 
-                    color: 'rgba(234,240,255,0.7)',
-                    marginBottom: '8px',
-                  }}>
-                    {cd.role || 'Role'}: {member.role || (cd.organizer || 'Organizer / Judge')}
-                  </div>
+                  
+                  {/* Bio */}
                   {member.bio && (
                     <div style={{ 
-                      fontSize: '12px', 
+                      fontSize: '13px', 
                       color: 'rgba(234,240,255,0.6)',
-                      lineHeight: 1.4,
+                      lineHeight: 1.5,
+                      maxHeight: '80px',
+                      overflow: 'hidden',
                     }}>
                       {member.bio}
                     </div>
