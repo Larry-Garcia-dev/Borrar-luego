@@ -8,7 +8,7 @@ content = """# 🎬 Hurammy (ShortVideo Platform)
 ![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
 
 Hurammy es una plataforma moderna y completa para compartir videos cortos, participar en campañas interactivas y generar contenido audiovisual mediante Inteligencia Artificial.
-
+dd
 ---
 
 ## ✨ Características Principales
