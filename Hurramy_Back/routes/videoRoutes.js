@@ -11,6 +11,7 @@ router.get('/trending', videoController.getTrendingVideos);
 router.get('/my', verifyToken, videoController.getMyVideos);
 
 router.get('/:id', videoController.getVideoById);
+router.post('/:id/view', videoController.incrementViews);
 
 // ========== RUTAS PROTEGIDAS (requieren token) ==========
 // Upload video

@@ -406,7 +406,6 @@ input[type="range"] {
   width: 100%;
   height: var(--major-announcement-height);
   flex-shrink: 0;
-  margin-top: calc(var(--header-height) * -1);
   background: url('/img/background_home.png') center top / 100% auto no-repeat;
   overflow: hidden;
   z-index: 10;
@@ -415,6 +414,9 @@ input[type="range"] {
 /* Banner Carousel Styles */
 .banner-carousel {
   position: relative;
+  margin: -18px -18px 18px -18px;
+  width: calc(100% + 36px);
+  border-radius: 0;
 }
 
 .banner-carousel-slides {
@@ -440,7 +442,6 @@ input[type="range"] {
 }
 
 .banner-carousel-campaign {
-  background: none !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -462,36 +463,52 @@ input[type="range"] {
 
 .banner-carousel-campaign-content {
   position: absolute;
-  bottom: 40px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   text-align: center;
-  padding: 20px;
-  max-width: 600px;
+  padding: 4px 15px;
+  width: 98%;
+  max-width: 1350px; /* Highly extended width to stretch descriptions */
+  max-height: 98%;
+  overflow-y: auto;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-carousel-campaign-content::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari/Webkit */
 }
 
 .banner-carousel-campaign-title {
-  font-size: 28px;
+  font-size: clamp(18px, 2.6vw, 26px);
   font-weight: 800;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  width: 100%;
 }
 
 .banner-carousel-campaign-desc {
-  font-size: 14px;
-  margin: 0 0 16px;
+  font-size: clamp(11px, 1.6vw, 13.5px);
+  margin: 0 0 10px;
   opacity: 0.9;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.4;
+  width: 100%;
+  max-width: 95%;
 }
 
 .banner-carousel-campaign-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
-  padding: 10px 24px;
-  border-radius: 12px;
+  min-height: 32px;
+  padding: 6px 20px;
+  border-radius: 10px;
   border: 2px solid rgba(255, 255, 255, 0.72);
   background: linear-gradient(135deg, rgba(255, 88, 211, 0.92), rgba(139, 77, 255, 0.92));
   color: var(--text);
@@ -2023,9 +2040,7 @@ input[type="range"] {
   grid-template-columns: minmax(0, 1fr) 280px;
 }
 
-body:has(.major_announcement) .app-layout {
-  height: calc(100vh - var(--major-announcement-height));
-}
+/* body:has(.major_announcement) .app-layout height override removed */
 
 /* ===================== */
 /* HEADER RESPONSIVE     */
@@ -3406,9 +3421,7 @@ body:has(.major_announcement) .app-layout {
   color: rgba(70, 230, 165, 0.95);
 }
 
-body:has(.major_announcement) .right-panel {
-  height: calc(100vh - var(--major-announcement-height));
-}
+/* body:has(.major_announcement) .right-panel height override removed */
 
 @media (max-width: 600px) {
   /* Campaign list */
@@ -4278,9 +4291,9 @@ body:has(.major_announcement) .right-panel {
   }
   
   .banner-carousel-campaign-content {
-    bottom: 30px;
-    padding: 16px;
-    max-width: 90%;
+    padding: 6px 12px;
+    max-width: 98%;
+    max-height: 98%;
   }
   
   .banner-carousel-arrow {

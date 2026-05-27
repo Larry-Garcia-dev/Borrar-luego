@@ -122,3 +122,16 @@ exports.giveFlowers = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+exports.incrementViews = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const video = await Video.findByPk(id);
+        if (!video) return res.status(404).json({ message: 'Video not found' });
+        video.views = (video.views || 0) + 1;
+        await video.save();
+        res.json({ message: 'View counted successfully', views: video.views });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};

@@ -70,6 +70,7 @@ function VideoPlayer() {
   const playerRef = useRef(null);
   const fsControlsTimeout = useRef(null);
   const speedMenuRef = useRef(null);
+  const lastCountedVideoId = useRef(null);
 
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
@@ -609,7 +610,20 @@ function VideoPlayer() {
                       onTimeUpdate={() => {
                         if (videoRef.current) setCurrentTime(videoRef.current.currentTime);
                       }}
-                      onPlay={() => { setIsPlaying(true); setStatusLabel(vp.playing || 'Playing'); }}
+                      onPlay={() => {
+                        setIsPlaying(true);
+                        setStatusLabel(vp.playing || 'Playing');
+                        if (lastCountedVideoId.current !== id) {
+                          lastCountedVideoId.current = id;
+                          axios.post(`${API_URL}/videos/${id}/view`)
+                            .then(res => {
+                              if (res.data && typeof res.data.views === 'number') {
+                                setVideo(prev => prev ? { ...prev, views: res.data.views } : null);
+                              }
+                            })
+                            .catch(err => console.error(err));
+                        }
+                      }}
                       onPause={() => { setIsPlaying(false); setStatusLabel(vp.paused || 'Paused'); }}
                       onDoubleClick={handleFullscreen}
                     />

@@ -73,12 +73,17 @@ exports.getCampaignDetails = async (req, res) => {
 
         if (!campaign) return res.status(404).json({ message: 'Campaña no encontrada' });
 
-        // LOGICA DE RANKING: Ordenar videos por cantidad de Likes
+        // LOGICA DE RANKING: Ordenar videos por cantidad de Puntos
+        // Formula de puntos: (Flowers * 100) + Likes
         // Convertimos a JSON puro para poder manipular el array
         const campaignData = campaign.toJSON();
         
-        // Calculamos likes y ordenamos
-        campaignData.Videos.sort((a, b) => b.Likes.length - a.Likes.length);
+        // Calculamos puntos y ordenamos de mayor a menor
+        campaignData.Videos.sort((a, b) => {
+            const pointsA = ((a.flowers || 0) * 100) + (a.Likes ? a.Likes.length : 0);
+            const pointsB = ((b.flowers || 0) * 100) + (b.Likes ? b.Likes.length : 0);
+            return pointsB - pointsA;
+        });
 
         // Tomamos solo el Top 10
         campaignData.Videos = campaignData.Videos.slice(0, 10);

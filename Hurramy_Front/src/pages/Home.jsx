@@ -197,22 +197,14 @@ function Home() {
       setBannerIdx(prev => (prev + 1) % totalBannerSlides);
     }, BANNER_ROTATE_MS);
     return () => clearInterval(bannerTimerRef.current);
-  }, [totalBannerSlides]);
+  }, [totalBannerSlides, bannerIdx]);
 
   const nextBanner = () => {
     setBannerIdx(prev => (prev + 1) % totalBannerSlides);
-    clearInterval(bannerTimerRef.current);
-    bannerTimerRef.current = setInterval(() => {
-      setBannerIdx(prev => (prev + 1) % totalBannerSlides);
-    }, BANNER_ROTATE_MS);
   };
 
   const prevBanner = () => {
     setBannerIdx(prev => (prev - 1 + totalBannerSlides) % totalBannerSlides);
-    clearInterval(bannerTimerRef.current);
-    bannerTimerRef.current = setInterval(() => {
-      setBannerIdx(prev => (prev + 1) % totalBannerSlides);
-    }, BANNER_ROTATE_MS);
   };
 
   // Mouse drag handlers for banner carousel
@@ -442,62 +434,74 @@ function Home() {
         />
       )}
 
-      {/* Banner Carousel - hidden on mobile */}
-      <section 
-        className="major_announcement banner-carousel" 
-        aria-label="Banner carousel"
-        onMouseDown={handleBannerMouseDown}
-        onMouseUp={handleBannerMouseUp}
-        onMouseLeave={handleBannerMouseLeave}
-        style={{ cursor: totalBannerSlides > 1 ? 'grab' : 'default' }}
-      >
-        {/* Slides */}
-        <div className="banner-carousel-slides">
-          {/* Main Banner (index 0) */}
-          <div className={`banner-carousel-slide${bannerIdx === 0 ? ' active' : ''}`}>
-            {/* Default banner background from CSS */}
-          </div>
-
-          {/* Campaign Banners */}
-          {bannerCampaigns.map((campaign, idx) => {
-            const bannerUrl = getCampaignBannerUrl(campaign.bannerUrl);
-            return (
-            <div 
-              key={campaign.id}
-              className={`banner-carousel-slide banner-carousel-campaign${bannerIdx === idx + 1 ? ' active' : ''}`}
-              style={{ backgroundImage: bannerUrl ? `url(${bannerUrl})` : 'none' }}
-            >
-              <div className="banner-carousel-campaign-content">
-                <h2 className="banner-carousel-campaign-title">{campaign.name}</h2>
-                <Link to={`/campaign/${campaign.id}`} className="banner-carousel-campaign-btn">
-                  {t.home?.viewCampaign || 'View Campaign'}
-                </Link>
-              </div>
-            </div>
-            );
-          })}
-        </div>
-
-        {/* Dots indicator */}
-        {totalBannerSlides > 1 && (
-          <div className="banner-carousel-dots">
-            {Array.from({ length: totalBannerSlides }).map((_, i) => (
-              <button
-                key={i}
-                className={`banner-carousel-dot${bannerIdx === i ? ' active' : ''}`}
-                onClick={() => setBannerIdx(i)}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
-          </div>
-        )}
-      </section>
-
       <div className="app-layout">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {/* Main Content - Grid */}
         <main className="home-main-pane" style={{ padding: '18px', overflowY: 'auto' }}>
+          {/* Banner Carousel - hidden on mobile */}
+          <section 
+            className="major_announcement banner-carousel" 
+            aria-label="Banner carousel"
+            onMouseDown={handleBannerMouseDown}
+            onMouseUp={handleBannerMouseUp}
+            onMouseLeave={handleBannerMouseLeave}
+            style={{ cursor: totalBannerSlides > 1 ? 'grab' : 'default' }}
+          >
+            {/* Slides */}
+            <div className="banner-carousel-slides">
+              {/* Main Banner (index 0) */}
+              <div className={`banner-carousel-slide${bannerIdx === 0 ? ' active' : ''}`}>
+                {/* Default banner background from CSS */}
+              </div>
+
+              {/* Campaign Banners */}
+              {bannerCampaigns.map((campaign, idx) => {
+                const bannerUrl = getCampaignBannerUrl(campaign.bannerUrl);
+                return (
+                <div 
+                  key={campaign.id}
+                  className={`banner-carousel-slide banner-carousel-campaign${bannerIdx === idx + 1 ? ' active' : ''}`}
+                  style={{ backgroundImage: bannerUrl ? `url("${encodeURI(bannerUrl)}")` : 'none' }}
+                >
+                  <div className="banner-carousel-campaign-content">
+                    <h2 className="banner-carousel-campaign-title">{campaign.name}</h2>
+                    {campaign.description && (
+                      <p className="banner-carousel-campaign-desc">{campaign.description}</p>
+                    )}
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: '8px',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      marginBottom: '16px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      color: '#19D3FF',
+                      textShadow: '0 2px 4px rgba(0,0,0,0.8)',
+                      background: 'rgba(0, 0, 0, 0.4)',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      width: 'fit-content',
+                      margin: '0 auto 16px auto',
+                      border: '1px solid rgba(25, 211, 255, 0.25)'
+                    }}>
+                      <span>📅 {formatDate(campaign.startDate)}</span>
+                      <span style={{ color: 'rgba(255,255,255,0.4)' }}>—</span>
+                      <span>{formatDate(campaign.endDate)}</span>
+                    </div>
+                    <Link to={`/campaign/${campaign.id}`} className="banner-carousel-campaign-btn">
+                      {t.home?.viewCampaign || 'View Campaign'}
+                    </Link>
+                  </div>
+                </div>
+                );
+              })}
+            </div>
+
+          </section>
           {/* Toggle row: Explore Videos + re-open announcements if closed */}
           <div className="home-toggle-row">
             {!announceOpen && totalAnn > 0 && (
