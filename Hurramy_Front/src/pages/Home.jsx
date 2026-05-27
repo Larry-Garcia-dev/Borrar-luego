@@ -157,6 +157,7 @@ function Home() {
 
         // Set banner campaigns (only campaigns with banners)
         const campaignsWithBanners = active.filter(c => c.bannerUrl);
+        console.log('[v0] Campaigns with banners:', campaignsWithBanners.map(c => ({ name: c.name, bannerUrl: c.bannerUrl })));
         setBannerCampaigns(campaignsWithBanners);
       })
       .catch(() => {
@@ -462,11 +463,16 @@ function Home() {
           {/* Campaign Banners */}
           {bannerCampaigns.map((campaign, idx) => {
             const bannerUrl = getCampaignBannerUrl(campaign.bannerUrl);
+            console.log('[v0] Rendering campaign banner:', campaign.name, 'URL:', bannerUrl);
             return (
             <div 
               key={campaign.id}
               className={`banner-carousel-slide banner-carousel-campaign${bannerIdx === idx + 1 ? ' active' : ''}`}
-              style={bannerUrl ? { backgroundImage: `url("${encodeURI(bannerUrl)}")` } : {}}
+              style={{ 
+                background: bannerUrl 
+                  ? `url("${encodeURI(bannerUrl)}") center / cover no-repeat` 
+                  : 'transparent'
+              }}
             >
               <div className="banner-carousel-campaign-content">
                 <h2 className="banner-carousel-campaign-title">{campaign.name}</h2>
